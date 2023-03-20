@@ -1,0 +1,5 @@
+'Load Knife File Paths
+&Custom_path = C:\SbParts\Custom\ 'Update this path if your Custom folder is located in a different place
+&KnifeSettings = &Custom_path & "Tangential_Knife\KnifeSettings.sbc" 'File in custom that loads knife offsets
+&KnifeHoming = &Custom_path & "Tangential_Knife\KnifeHoming.sbp" 'File in custom that homes the B-axis (knife)
+&KnifeZZero = &Custom_path & "Tangential_Knife\KnifeZZero.sbp" 'File in custom that homes the Z Axis for knife cutting (knife) 

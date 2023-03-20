@@ -1,0 +1,40 @@
+'Home Tangential Osillating Knife Blade
+C#,92 'Load Knife Settings
+
+SF,0 'Turn off limit checking
+VN,0 'Disable limit switches
+&SCALE = 1 'Default to inches for key values
+IF %(25) = 1 THEN &SCALE = 25.4 'Update scale factor if machine is set to metric
+&SW2_SwitchType = %(92)  '  If #2 Input is 2, then we have (PRS) normally-closed switches on #2 and #3
+IF %(92) = 2 THEN GOTO IndepLimits 'Check switch type for input 2 to confirm if machine is using independent limit inputs (alpha, 5ax, Handibot) or indentical limit inputs (DT, Standard)
+&ZINPUT = 3 'Z limit switch is on input 3
+&ZSTATE = 1 'Switch is normally open
+Goto IdentLimits
+IndepLimits:
+&ZINPUT = 5 'Z limit switch is on input 5
+&ZSTATE = 0 'Switch is normally closed
+IdentLimits:
+&ZMOVE = 36 * &SCALE 'Big z move to ensure that the z limit switch is triggered
+&BACKOFF = 0.5 * &SCALE 'Move to back off of limit switch after triggering
+
+C3 'Home the machine normally; offsets for knife will be applied later
+
+IF &ATC = 1 Then GoSub EMPTY_SPINDLE 'If machine is PRS3 ATC then we need to unload the bit before using the knife
+IF &ATC = 2 Then GoSub EMPTY_SPINDLE 'If machine is PRS4 ATC then we need to unload the bit before using the knife
+IF &ATC = 3 Then GoSub EMPTY_SPINDLE 'If the machine is a DT2418 ATC then we need to unload the bit before using the knife
+IF &ATC = 4 Then GoSub EMPTY_SPINDLE 'If the machine is a DTMAX ATC then we need to unload the bit before using the knife
+
+FP,&KnifeHoming
+FP,&KnifeZZero
+
+End 'This is the normal end of the file
+
+EMPTY_SPINDLE:
+C#,89 'Load info on current tool in spindle
+IF &toolIN = 0 Then GoTo ALREADY_EMPTY 'If no tool is present then we can skip the unload cycle.
+'Before setting up for knife operation the machine will unload the current tool from the ATC Spindle.
+PAUSE
+&tool = 0 'Set up tool change to tool 0 in order to unload spindle
+C9 'Trigger toolchange to drop off bit
+ALREADY_EMPTY:
+Return

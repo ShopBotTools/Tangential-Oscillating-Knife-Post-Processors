@@ -1,0 +1,12 @@
+'The pneumatic cylinder connected to the knife will now extend, make sure the area below the knife is clear.
+PAUSE
+SO,5,1 'Extend pneumatic cylinder to lower knife
+'The keypad will now open, move the machine so that the knife is positioned over your z zero plate
+PAUSE
+SK 'Open keypad
+'SO,6,1 'Turn on knife vibration
+'Attach copper grounding clip to one of the connector housings on the top of the knife unit
+PAUSE
+C2 'Run normal Z Zero routine
+'SO,6,0 'Turn off knife vibration
+SO,5,0 'Lift knife

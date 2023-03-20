@@ -1,0 +1,16 @@
+FP,&KnifeSettings
+IF %(56) = 1 THEN MB, %(5) + 30 'Automatically get off limit switch for knife if it is triggered
+ON INP(&KNIFEINPUT,&KNIFESTATE) GoTo CONTACT2 'Set up listener for knife limit switch triggering
+MB,%(5) + 360 'full rotation of knife to search for limit switch
+
+'Failed to detect limit switch, ensure that knife cables are connected.
+PAUSE
+
+SUCCESS:
+
+END
+
+CONTACT2:
+VA,,,,,&Boffset,,,,,0 'Offset position of knife once limit switch is triggered.
+MB,0 'Align knife with X axis positive direction
+GoTo SUCCESS

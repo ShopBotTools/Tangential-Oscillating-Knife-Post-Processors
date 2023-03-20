@@ -1,0 +1,60 @@
+VD,,5
+VU,,,,,,,,,11.1111,,,,,1,,
+VS,,,,2000,,,,2000
+VN,,,,,,,,0
+&SCALE = 1
+IF %(25) = 1 THEN &SCALE = 25.4
+'The function of your knife will now be tested. First we will home your machine.
+PAUSE
+C3
+M2,8*&SCALE,8*&SCALE
+'The Keypad will open. If necessary move the Z axis of your machine up so that the knife blade is at least 6" (150mm) off the table. Exit the keypad when finished.
+PAUSE
+SK
+
+'Now we will lower the knife using the pneumatic cylinder. Press "OK" when a prompt warning of spindle start appears.
+PAUSE
+SO,5,1
+PAUSE 2
+SO,5,0
+
+MSGBOX(Did the pneumatic cylinder extend and retract?, YesNo, Error Check)
+IF &msganswer = no THEN GOTO CYLINDERERROR
+
+'Now we will check the oscillation function of the knife.
+PAUSE
+SO,6,1
+PAUSE 2
+SO,6,0
+
+MSGBOX(Did the knife vibrate briefly?, YesNo, Error Check)
+IF &msganswer = no THEN GOTO VIBRATIONERERROR
+
+'Now we will check the rotation of the knife. The blade should make one full rotation from its current location.
+PAUSE
+ZB
+MB,360
+
+MSGBOX(Did the knife rotate 360 degrees?, YesNo, Error Check)
+IF &msganswer = no THEN GOTO ROTATIONERERROR
+
+'Function tests successfully completed!
+PAUSE
+END
+
+'ERROR MESSAGES
+'--------------------------------------------------------------------------------------------------------------
+CYLINDERERROR:
+'There is a problem with the function of Output 5. Please refer to the wiring section of the installation manual.
+PAUSE
+END
+
+VIBRATIONERROR:
+'There is a problem with the function of Output 6. Please refer to the wiring section of the installation manual.
+PAUSE
+END
+
+ROTATIONERERROR:
+'There is a problem with the motor connection. Please refer to the wiring section of the installation manual.
+PAUSE
+END

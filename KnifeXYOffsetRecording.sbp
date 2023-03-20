@@ -1,0 +1,46 @@
+C#,92
+FP, &KnifeSettings
+&SCALE = 1
+IF %(25) = 1 THEN &LIFT = 25.4
+&LIFT = 3 * &SCALE
+
+'The machine is going to move towards the center of the table. Make sure that no tools or materials are in the way.
+PAUSE
+M2,8 * &SCALE,8 * &SCALE
+'The keypad will open. Insert a V-Bit into your spindle and lower the Z axis until the bit is touching the table. Exit the keypad when complete. 
+PAUSE
+SK
+
+'Use a pen to mark the location of the center of the bit on your table.
+PAUSE
+&STARTX = %(1)
+&STARTY = %(2)
+
+MZ,%(3)+&LIFT
+'Remove the V-Bit from your spindle.
+PAUSE
+
+'The pneumatic cylinder attached to the knife will now extend, lowering the knife. 
+PAUSE
+SO,5,1
+
+'The keypad will now open again, use the keypad to position the tip of the knife directly over the mark that was made on the table. Exit the keypad when complete. 
+PAUSE
+SK
+
+&Knife_X_offset = %(1) - &STARTX
+&Knife_Y_offset = %(2) - &STARTY
+
+OPEN &KnifeSettings for OUTPUT AS #1
+WRITE #1; "&KNIFEINPUT = "; &KNIFEINPUT
+WRITE #1; "&KNIFESTATE = "; &KNIFESTATE
+WRITE #1; "&Boffset = "; &Boffset
+WRITE #1; "&Knife_X_offset = "; &Knife_X_offset
+WRITE #1; "&Knife_Y_offset = "; &Knife_Y_offset
+CLOSE #1
+
+MZ,%(3)+&LIFT
+
+'Your knife XY offsets have been successfully recorded!
+PAUSE
+END
